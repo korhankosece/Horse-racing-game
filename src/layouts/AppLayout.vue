@@ -59,7 +59,7 @@ import { AppButton } from '@/components/common'
   overflow: hidden;
 
   > :first-child {
-    width: 300px;
+    width: 340px;
     border-right: 1px solid $theme-colors-border-light;
   }
 }

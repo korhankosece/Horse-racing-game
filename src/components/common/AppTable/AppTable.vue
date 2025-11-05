@@ -36,6 +36,7 @@ const props = withDefaults(defineProps<AppTableProps>(), {
 .app-table-container {
   width: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .app-table {
