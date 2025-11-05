@@ -18,10 +18,13 @@
 @use '@/styles/variables' as *;
 
 .race-track {
-  padding: 1rem;
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 1rem;
+  background-color: $theme-colors-background-white;
+  min-height: 0;
+  overflow: hidden;
 
   h2 {
     margin-bottom: 1rem;

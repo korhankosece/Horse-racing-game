@@ -19,6 +19,9 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: $theme-colors-background-white;
+  min-height: 0;
+  overflow: hidden;
 
   h2 {
     margin-bottom: 1rem;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { HorseList, RaceTrack, Program, Results } from '@/components/racing'
-import AppButton from '@/components/common/AppButton'
+import { AppButton } from '@/components/common'
 </script>
 
 <template>
@@ -37,11 +37,11 @@ import AppButton from '@/components/common/AppButton'
 
 .header {
   padding: 1rem;
-  background-color: $theme-colors-background-white;
   border-bottom: 1px solid $theme-colors-border-light;
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+  background-color: $theme-colors-background-white;
 }
 
 .main-content {
@@ -55,16 +55,12 @@ import AppButton from '@/components/common/AppButton'
   flex: 1;
   display: flex;
   border-bottom: 1px solid $theme-colors-border-light;
+  min-height: 0;
+  overflow: hidden;
 
-  .horse-list {
+  > :first-child {
     width: 300px;
     border-right: 1px solid $theme-colors-border-light;
-    background-color: $theme-colors-background-white;
-  }
-
-  .race-track {
-    flex: 1;
-    background-color: $theme-colors-background-white;
   }
 }
 
@@ -73,13 +69,11 @@ import AppButton from '@/components/common/AppButton'
   display: flex;
   border-top: 1px solid $theme-colors-border-light;
 
-  .program,
-  .results {
+  > * {
     flex: 1;
-    background-color: $theme-colors-background-white;
   }
 
-  .program {
+  > :first-child {
     border-right: 1px solid $theme-colors-border-light;
   }
 }
