@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import HorseList from '@/components/features/HorseList/HorseList.vue'
-import RaceTrack from '@/components/features/RaceTrack/RaceTrack.vue'
-import Program from '@/components/features/Program/Program.vue'
-import Results from '@/components/features/Results/Results.vue'
-import AppButton from '@/components/common/AppButton/AppButton.vue'
+import { HorseList, RaceTrack, Program, Results } from '@/components/racing'
+import AppButton from '@/components/common/AppButton'
 </script>
 
 <template>
