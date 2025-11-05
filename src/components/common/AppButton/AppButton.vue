@@ -40,8 +40,9 @@ const props = withDefaults(defineProps<AppButtonProps>(), {
   }
 
   &--secondary {
-    background-color: $theme-colors-secondary;
-    color: $theme-colors-background-white;
+    background-color: $theme-colors-background-white;
+    color: $theme-colors-secondary;
+    border: 2px solid $theme-colors-secondary;
   }
 }
 </style>
