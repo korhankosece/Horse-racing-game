@@ -9,32 +9,24 @@ export interface ProgramState {
   rounds: Round[]
 }
 
+// Helper function to get unique random item from array
+export const getUniqueRandomItem = <T>(array: T[], used: Set<T>): T | null => {
+  const available = array.filter(item => !used.has(item))
+  if (available.length === 0) return null
+  const randomIndex = Math.floor(Math.random() * available.length)
+  return available[randomIndex]!
+}
+
 const generateHorses = (): Horse[] => {
   const generatedHorses: Horse[] = []
   const usedNames = new Set<string>()
   const usedColors = new Set<string>()
 
   for (let i = 0; i < TOTAL_HORSES; i++) {
-    let nameIndex = Math.floor(Math.random() * HORSE_NAMES.length)
-    let name = HORSE_NAMES[nameIndex]
-    if (!name) continue
-    while (usedNames.has(name)) {
-      nameIndex = Math.floor(Math.random() * HORSE_NAMES.length)
-      name = HORSE_NAMES[nameIndex]
-      if (!name) break
-    }
-    if (!name) continue
-    usedNames.add(name)
+    const name = getUniqueRandomItem(HORSE_NAMES, usedNames)!
+    const color = getUniqueRandomItem(HORSE_COLORS, usedColors)!
 
-    let colorIndex = Math.floor(Math.random() * HORSE_COLORS.length)
-    let color = HORSE_COLORS[colorIndex]
-    if (!color) continue
-    while (usedColors.has(color)) {
-      colorIndex = Math.floor(Math.random() * HORSE_COLORS.length)
-      color = HORSE_COLORS[colorIndex]
-      if (!color) break
-    }
-    if (!color) continue
+    usedNames.add(name)
     usedColors.add(color)
 
     generatedHorses.push({
@@ -68,10 +60,10 @@ const generateSchedule = (horses: Horse[]): Round[] => {
 const programModule: Module<ProgramState, unknown> = {
   namespaced: true,
 
-  state: {
+  state: (): ProgramState => ({
     horses: [],
     rounds: [],
-  },
+  }),
 
   mutations: {
     SET_HORSES(state: ProgramState, horses: Horse[]) {

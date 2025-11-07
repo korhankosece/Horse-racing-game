@@ -1,26 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { RoundResult } from '@/types'
+import { useRace } from '@/composables'
 import { getOrdinalSuffix } from '@/utils'
 import { AppTable } from '@/components/common'
 import type { AppTableColumn } from '@/components/common/AppTable/AppTable.props'
 
-const results = ref<RoundResult[]>([])
+const { allRoundResults } = useRace()
 
 const columns: AppTableColumn[] = [
   { key: 'position', label: 'Position' },
   { key: 'name', label: 'Name' },
 ]
-
-// Results will be populated when race finishes
-// For now, keep empty array
 </script>
 
 <template>
   <div class="results">
     <h2>Results</h2>
     <div class="results-content">
-      <div v-for="result in results" :key="result.number" class="round-section">
+      <div v-for="result in allRoundResults" :key="result.number" class="round-section">
         <h3 class="round-title">
           {{ getOrdinalSuffix(result.number) }} Lap - {{ result.distance }}m
         </h3>

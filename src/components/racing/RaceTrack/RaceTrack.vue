@@ -48,7 +48,7 @@ const trackLength = computed(
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   background-color: $theme-colors-background-white;
   min-height: 0;
   overflow: hidden;
