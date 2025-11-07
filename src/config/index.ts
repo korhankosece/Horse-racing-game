@@ -1,5 +1,5 @@
 export const RACE_CONFIG = {
-  interval: 500, // ms
+  interval: 50, // ms
   maxSpeed: 50, // pixels per interval
   trackLengths: {
     1200: 600, // meters -> pixels

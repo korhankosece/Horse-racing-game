@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useRacing } from '@/composables'
+import { useProgram } from '@/composables'
 import { getOrdinalSuffix } from '@/utils'
 import { AppTable } from '@/components/common'
 import type { AppTableColumn } from '@/components/common/AppTable/AppTable.props'
 
-const { rounds } = useRacing()
+const { rounds } = useProgram()
 
 const columns: AppTableColumn[] = [
   { key: 'position', label: 'Position' },

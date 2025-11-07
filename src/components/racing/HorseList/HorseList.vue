@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRacing } from '@/composables'
+import { useProgram } from '@/composables'
 import { AppColorIndicator, AppTable } from '@/components/common'
 import type { AppTableColumn } from '@/components/common/AppTable/AppTable.props'
 
-const { horses } = useRacing()
+const { horses } = useProgram()
 
 const columns: AppTableColumn[] = [
   { key: 'name', label: 'Name' },

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { ROUND_DISTANCES, RACE_CONFIG } from '@/config'
-import { useRacing } from '@/composables'
+import { useProgram } from '@/composables'
 import { getOrdinalSuffix } from '@/utils'
 import HorseIcon from '@/components/racing/HorseIcon'
 
-const { rounds } = useRacing()
+const { rounds } = useProgram()
 
 const currentRound = ref(1)
 const currentRoundHorses = computed(() => {

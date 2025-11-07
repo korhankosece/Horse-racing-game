@@ -4,7 +4,7 @@ import { HORSE_NAMES } from '@/data/horseNames'
 import { HORSE_COLORS } from '@/data/horseColors'
 import { ROUND_DISTANCES, TOTAL_HORSES, HORSES_PER_ROUND } from '@/config'
 
-export interface RacingState {
+export interface ProgramState {
   horses: Horse[]
   rounds: Round[]
 }
@@ -65,7 +65,7 @@ const generateSchedule = (horses: Horse[]): Round[] => {
   return generatedRounds
 }
 
-const racingModule: Module<RacingState, unknown> = {
+const programModule: Module<ProgramState, unknown> = {
   namespaced: true,
 
   state: {
@@ -74,11 +74,11 @@ const racingModule: Module<RacingState, unknown> = {
   },
 
   mutations: {
-    SET_HORSES(state: RacingState, horses: Horse[]) {
+    SET_HORSES(state: ProgramState, horses: Horse[]) {
       state.horses = horses
     },
 
-    SET_ROUNDS(state: RacingState, rounds: Round[]) {
+    SET_ROUNDS(state: ProgramState, rounds: Round[]) {
       state.rounds = rounds
     },
   },
@@ -95,7 +95,7 @@ const racingModule: Module<RacingState, unknown> = {
       state,
     }: {
       commit: (mutation: string, payload?: unknown) => void
-      state: RacingState
+      state: ProgramState
     }): void {
       if (state.horses.length === 0) {
         const horses = generateHorses()
@@ -107,10 +107,9 @@ const racingModule: Module<RacingState, unknown> = {
   },
 
   getters: {
-    horses: (state: RacingState) => state.horses,
-    rounds: (state: RacingState) => state.rounds,
+    horses: (state: ProgramState) => state.horses,
+    rounds: (state: ProgramState) => state.rounds,
   },
 }
 
-export default racingModule
-
+export default programModule

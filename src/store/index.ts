@@ -1,8 +1,10 @@
 import { createStore } from 'vuex'
-import racingModule from './modules/racing'
+import programModule from './modules/program'
+import raceModule from './modules/race'
 
 export default createStore({
   modules: {
-    racing: racingModule,
+    program: programModule,
+    race: raceModule,
   },
 })

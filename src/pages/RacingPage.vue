@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { HorseList, RaceTrack, Program, Results } from '@/components/racing'
-import { useRacing } from '@/composables'
+import { useProgram } from '@/composables'
 
-const { generateHorses, horses } = useRacing()
+const { generateHorses, horses } = useProgram()
 
 onMounted(() => {
   // Initialize horses once when page loads
