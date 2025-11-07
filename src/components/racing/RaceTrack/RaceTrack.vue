@@ -1,79 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { HORSE_NAMES } from '@/data/horseNames'
-import { HORSE_COLORS } from '@/data/horseColors'
+import { ref, computed } from 'vue'
 import { ROUND_DISTANCES, RACE_CONFIG } from '@/config'
+import { useRacing } from '@/composables'
+import { getOrdinalSuffix } from '@/utils'
 import HorseIcon from '@/components/racing/HorseIcon'
 
-interface Horse {
-  id: string
-  name: string
-  condition: number
-  color: string
-}
+const { rounds } = useRacing()
 
 const currentRound = ref(1)
-const currentRoundHorses = ref<Horse[]>([])
-
-const getOrdinalSuffix = (num: number): string => {
-  const j = num % 10
-  const k = num % 100
-  if (j === 1 && k !== 11) return `${num}st`
-  if (j === 2 && k !== 12) return `${num}nd`
-  if (j === 3 && k !== 13) return `${num}rd`
-  return `${num}th`
-}
-
-const generateHorses = (): Horse[] => {
-  const generatedHorses: Horse[] = []
-  const usedNames = new Set<string>()
-  const usedColors = new Set<string>()
-
-  for (let i = 0; i < 20; i++) {
-    let nameIndex = Math.floor(Math.random() * HORSE_NAMES.length)
-    let name = HORSE_NAMES[nameIndex]
-    if (!name) continue
-    while (usedNames.has(name)) {
-      nameIndex = Math.floor(Math.random() * HORSE_NAMES.length)
-      name = HORSE_NAMES[nameIndex]
-      if (!name) break
-    }
-    if (!name) continue
-    usedNames.add(name)
-
-    let colorIndex = Math.floor(Math.random() * HORSE_COLORS.length)
-    let color = HORSE_COLORS[colorIndex]
-    if (!color) continue
-    while (usedColors.has(color)) {
-      colorIndex = Math.floor(Math.random() * HORSE_COLORS.length)
-      color = HORSE_COLORS[colorIndex]
-      if (!color) break
-    }
-    if (!color) continue
-    usedColors.add(color)
-
-    generatedHorses.push({
-      id: `horse-${i + 1}`,
-      name,
-      condition: Math.floor(Math.random() * 100) + 1,
-      color,
-    })
-  }
-
-  return generatedHorses
-}
-
+const currentRoundHorses = computed(() => {
+  const round = rounds.value.find(r => r.number === currentRound.value)
+  return round ? round.horses : []
+})
 const currentDistance = computed(() => ROUND_DISTANCES[currentRound.value - 1] || 1200)
 const trackLength = computed(
   () =>
     RACE_CONFIG.trackLengths[currentDistance.value as keyof typeof RACE_CONFIG.trackLengths] || 600
 )
-
-onMounted(() => {
-  const horses = generateHorses()
-  const shuffled = [...horses].sort(() => Math.random() - 0.5)
-  currentRoundHorses.value = shuffled.slice(0, 10)
-})
 </script>
 
 <template>
