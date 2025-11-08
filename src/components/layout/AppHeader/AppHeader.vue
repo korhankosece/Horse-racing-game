@@ -44,7 +44,7 @@ const handleRaceControl = () => {
 
 <template>
   <header class="header">
-    <h1 class="header-title">Horse Racing Game</h1>
+    <h1 class="header-title">Horse Racing</h1>
     <div class="header-actions">
       <AppButton
         variant="primary"

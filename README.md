@@ -1,4 +1,4 @@
-# Horse Racing Game
+# Horse Racing
 
 A modern horse racing simulation application built with Vue 3 and TypeScript, featuring real-time race tracking, multiple rounds, pause/resume functionality, and comprehensive race results.
 
