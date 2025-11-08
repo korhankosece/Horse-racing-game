@@ -47,7 +47,9 @@ describe('AppModal', () => {
 
     await waitForTeleport()
 
-    expect(getModalElement('.modal-title')?.textContent).toBe('Test Title')
+    const title = getModalElement('.modal-title')
+    expect(title?.textContent).toBe('Test Title')
+    expect(title?.getAttribute('id')).toContain('-title')
     expect(getModalElement('.modal-subtitle')?.textContent).toBe('Test Subtitle')
   })
 
@@ -166,9 +168,13 @@ describe('AppModal', () => {
     await waitForTeleport()
 
     const overlay = getModalElement('.modal-overlay')
+    const title = getModalElement('.modal-title')
+    const titleId = title?.getAttribute('id')
+
     expect(overlay?.getAttribute('role')).toBe('dialog')
     expect(overlay?.getAttribute('aria-modal')).toBe('true')
-    expect(overlay?.getAttribute('aria-labelledby')).toContain('-title')
+    expect(overlay?.getAttribute('aria-labelledby')).toBe(titleId)
+    expect(titleId).toContain('-title')
   })
 
   it('should not have aria-labelledby when title is not provided', async () => {

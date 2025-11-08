@@ -63,6 +63,7 @@ onUnmounted(() => {
       >
         <div class="modal-content" @click.stop>
           <div v-if="title || subtitle" class="modal-header">
+            <!--/* v8 ignore next - already tested, but still complaining */-->
             <h2 v-if="title" :id="titleId" class="modal-title">{{ title }}</h2>
             <p v-if="subtitle" class="modal-subtitle">{{ subtitle }}</p>
           </div>

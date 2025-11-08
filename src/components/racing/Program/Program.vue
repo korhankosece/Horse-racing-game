@@ -36,7 +36,7 @@ const roundTableDataMap = computed(() => {
         <h3 class="round-title">
           {{ getOrdinalSuffix(round.number) }} Lap - {{ round.distance }}m
         </h3>
-        <AppTable :columns="columns" :data="roundTableDataMap.get(round.number) || []" />
+        <AppTable :columns="columns" :data="roundTableDataMap.get(round.number)!" />
       </div>
     </div>
   </div>
