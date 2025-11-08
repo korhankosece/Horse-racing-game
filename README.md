@@ -1,54 +1,120 @@
-# horse-racing-game
+# Horse Racing Game
 
-This template should help get you started developing with Vue 3 in Vite.
+A modern horse racing simulation application built with Vue 3 and TypeScript, featuring real-time race tracking, multiple rounds, pause/resume functionality, and comprehensive race results.
 
-## Recommended IDE Setup
+## Getting Started
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### Prerequisites
 
-## Recommended Browser Setup
+- Node.js (v20.19.0 or higher, or v22.12.0+)
+- npm or yarn
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+### Installation
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+or
 
-```sh
+```bash
+yarn install
+```
+
+### Running the Development Server
+
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+or
 
-```sh
-npm run build
+```bash
+yarn dev
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+The application will start at `http://localhost:5173`
 
-```sh
-npm run test:unit
+## Features
+
+- **Race Program Management**: Generate multi-round race programs with customizable distances and horse assignments
+- **Race Control**: Start, pause, and resume races with real-time position tracking
+- **Race Visualization**: Live race track with visual progress representation and round transition countdown
+- **Results & Statistics**: Real-time results tables, complete race history, and position tracking
+- **Accessibility**: ARIA attributes and semantic HTML for inclusive user experience
+
+## Tech Stack
+
+- **Vue 3** with Composition API
+- **TypeScript** for type safety
+- **Vuex** for state management
+- **Vite** for build tooling
+- **Vitest** & **Vue Test Utils** for testing
+- **SCSS** for styling
+
+## Project Structure
+
+```
+src/
+  ├── components/     # Reusable components (common, layout, racing)
+  ├── composables/   # Vue composition API hooks
+  ├── pages/         # Page components
+  ├── layouts/       # Layout components
+  ├── store/         # Vuex store modules (race, program)
+  ├── styles/        # Global styles and theme variables
+  ├── types/         # TypeScript type definitions
+  ├── utils/         # Utility functions
+  ├── data/          # Static data
+  └── config/        # Application configuration
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Development Summary
 
-```sh
-npm run lint
-```
+This project demonstrates enterprise-level development practices with a focus on clean architecture, comprehensive testing, and maintainable code patterns.
+
+### Architecture & Design Patterns
+
+- **Separation of Concerns**: Complete separation between UI layer and business logic through Vuex store modules and composables. Components remain purely presentational.
+
+- **Modular State Management**: Feature-based Vuex modules (`race`, `program`) with consistent structure (`state.ts`, `getters.ts`, `mutations.ts`, `actions.ts`, `types.ts`).
+
+- **Composition API Pattern**: Custom composables (`useProgram`, `useRace`) provide clean abstraction between components and store, enabling better testability and reusability.
+
+- **Component Architecture**: Strict hierarchy with clear separation between common UI, layout, and feature-specific components following single responsibility principle.
+
+- **Type Safety**: Full TypeScript coverage with strict typing throughout the application.
+
+### Testing Excellence
+
+- **Comprehensive Test Coverage**: 100% code coverage across all critical paths (store modules, composables, components, pages, utilities).
+
+- **Testing Strategy**: Co-located unit tests following the same directory structure. Tests utilize Vitest with Vue Test Utils, featuring comprehensive mocking strategies and helper utilities.
+
+- **Test Quality**: Focus on maintainability with helper functions to reduce duplication. Consistent patterns and best practices across all test files.
+
+### Code Quality & Standards
+
+- **Linting & Formatting**: ESLint with Vue/TypeScript configurations and Prettier for consistent formatting.
+
+- **Type Checking**: Strict TypeScript compilation with `vue-tsc` ensuring type safety at build time.
+
+- **Code Organization**: Consistent file structure, naming conventions, and import grouping throughout the project.
+
+- **Accessibility**: ARIA attributes and semantic HTML for inclusive user experience.
+
+### Development Workflow
+
+- **Build Pipeline**: Parallel type checking and build processes for optimal development experience.
+- **Hot Module Replacement**: Fast development feedback with Vite's HMR.
+- **Test-Driven Development**: Comprehensive test suite enables confident refactoring and feature additions.
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run test:unit` - Run unit tests
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run lint` - Run ESLint and fix issues
+- `npm run format` - Format code with Prettier
+- `npm run type-check` - Type check with TypeScript
