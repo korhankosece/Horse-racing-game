@@ -13,7 +13,6 @@ export const actions = {
       return
     }
 
-    // Reset race if starting fresh
     if (state.raceStatus === 'idle' || state.raceStatus === 'finished') {
       commit('RESET_RACE')
       commit('SET_CURRENT_ROUND', 1)
@@ -104,9 +103,7 @@ export const actions = {
       currentRoundResult.horses.map(result => result.horse.id)
     )
 
-    // Update positions for all horses in current round
     currentRoundData.horses.forEach(horse => {
-      // Skip if horse already finished
       if (finishedHorseIds.has(horse.id)) {
         return
       }
@@ -117,7 +114,6 @@ export const actions = {
 
       commit('SET_HORSE_POSITION', { horseId: horse.id, position: newPosition })
 
-      // Check if horse finished
       if (newPosition >= trackLength) {
         const position = currentRoundResult.horses.length + 1
         commit('ADD_ROUND_RESULT', {
@@ -128,12 +124,10 @@ export const actions = {
       }
     })
 
-    // Check if all horses finished
     if (currentRoundResult.horses.length === currentRoundData.horses.length) {
       const nextRound = state.currentRound + 1
 
       if (nextRound <= rootState.program.rounds.length) {
-        // Pause race and show transition modal
         commit('SET_RACE_STATUS', 'paused')
         if (state.raceInterval) {
           clearInterval(state.raceInterval)
@@ -141,7 +135,6 @@ export const actions = {
         }
         commit('SHOW_ROUND_TRANSITION', nextRound)
       } else {
-        // All rounds finished
         commit('SET_RACE_STATUS', 'finished')
         if (state.raceInterval) {
           clearInterval(state.raceInterval)

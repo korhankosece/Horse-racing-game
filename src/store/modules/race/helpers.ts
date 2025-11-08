@@ -21,14 +21,12 @@ export const initializeRound = (
   commit: (mutation: string, payload?: unknown) => void,
   state: RaceState
 ): void => {
-  // Initialize horse positions
   roundData.horses.forEach(horse => {
     if (!(horse.id in state.horsePositions)) {
       commit('SET_HORSE_POSITION', { horseId: horse.id, position: 0 })
     }
   })
 
-  // Initialize empty round result
   const roundResult: RoundResult = {
     number: roundNumber,
     distance: roundData.distance,

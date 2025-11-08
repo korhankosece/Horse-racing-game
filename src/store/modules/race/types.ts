@@ -7,7 +7,7 @@ export interface RaceState {
   currentRound: number
   raceStatus: RaceStatus
   horsePositions: Record<string, number> // horseId -> position in pixels
-  allRoundResults: RoundResult[] // All round results
+  allRoundResults: RoundResult[]
   raceInterval: number | null
   showRoundTransition: boolean
   nextRoundNumber: number | null
