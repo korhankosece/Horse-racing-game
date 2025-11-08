@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+
+import HorseIcon from '@/components/racing/HorseIcon'
 import { RACE_CONFIG } from '@/config'
 import { useProgram, useRace } from '@/composables'
 import { getOrdinalSuffix } from '@/utils'
-import HorseIcon from '@/components/racing/HorseIcon'
 
 const { rounds } = useProgram()
 const { currentRound, horsePositions } = useRace()

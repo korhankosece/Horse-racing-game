@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { AppTableProps } from './AppTable.props'
 import { withDefaults } from 'vue'
+
+import type { AppTableProps } from './AppTable.props'
 
 const props = withDefaults(defineProps<AppTableProps>(), {
   stickyHeader: true,

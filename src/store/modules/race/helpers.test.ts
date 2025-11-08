@@ -1,23 +1,26 @@
-import { describe, it, expect, vi } from 'vitest'
-import { calculateSpeed, getTrackLength, getCurrentRoundResult, initializeRound } from './helpers'
-import type { RaceState } from './types'
+import { describe, expect, it, vi } from 'vitest'
+
 import { createMockHorse, createMockRound, createMockRoundResult } from '@/store/testing'
 
+import { calculateSpeed, getCurrentRoundResult, getTrackLength, initializeRound } from './helpers'
+import type { RaceState } from './types'
+
 describe('Race Helpers', () => {
+  const createState = (overrides?: Partial<RaceState>): RaceState => ({
+    currentRound: 1,
+    raceStatus: 'idle',
+    horsePositions: {},
+    allRoundResults: [],
+    raceInterval: null,
+    showRoundTransition: false,
+    nextRoundNumber: null,
+    ...overrides,
+  })
+
   describe('calculateSpeed', () => {
     it('should return higher speed for higher condition', () => {
-      const highConditionHorse = createMockHorse({
-        id: 'horse-1',
-        name: 'High Condition',
-        condition: 100,
-      })
-
-      const lowConditionHorse = createMockHorse({
-        id: 'horse-2',
-        name: 'Low Condition',
-        condition: 10,
-        color: '#0000FF',
-      })
+      const highConditionHorse = createMockHorse({ condition: 100 })
+      const lowConditionHorse = createMockHorse({ condition: 10 })
 
       // Mock Math.random to get same base speed
       const mockRandom = vi.spyOn(Math, 'random').mockReturnValue(0.5)
@@ -46,14 +49,10 @@ describe('Race Helpers', () => {
   describe('getCurrentRoundResult', () => {
     it('should return current round result', () => {
       const roundResult = createMockRoundResult({ number: 1, distance: 1200 })
-
-      const state: RaceState = {
+      const state = createState({
         currentRound: 1,
-        raceStatus: 'idle',
-        horsePositions: {},
         allRoundResults: [roundResult],
-        raceInterval: null,
-      }
+      })
 
       const result = getCurrentRoundResult(state)
 
@@ -61,13 +60,10 @@ describe('Race Helpers', () => {
     })
 
     it('should return undefined if round result not found', () => {
-      const state: RaceState = {
+      const state = createState({
         currentRound: 2,
-        raceStatus: 'idle',
-        horsePositions: {},
         allRoundResults: [createMockRoundResult({ number: 1, distance: 1200 })],
-        raceInterval: null,
-      }
+      })
 
       const result = getCurrentRoundResult(state)
 
@@ -77,8 +73,8 @@ describe('Race Helpers', () => {
 
   describe('initializeRound', () => {
     it('should initialize horse positions for new horses', () => {
-      const horse1 = createMockHorse({ id: 'horse-1', name: 'Horse 1', condition: 100 })
-      const horse2 = createMockHorse({ id: 'horse-2', name: 'Horse 2', condition: 80, color: '#0000FF' })
+      const horse1 = createMockHorse({ id: 'horse-1' })
+      const horse2 = createMockHorse({ id: 'horse-2' })
 
       const roundData = createMockRound({
         number: 1,
@@ -86,14 +82,7 @@ describe('Race Helpers', () => {
         horses: [horse1, horse2],
       })
 
-      const state: RaceState = {
-        currentRound: 1,
-        raceStatus: 'idle',
-        horsePositions: {},
-        allRoundResults: [],
-        raceInterval: null,
-      }
-
+      const state = createState()
       const commit = vi.fn()
 
       initializeRound(1, roundData, commit, state)
@@ -109,8 +98,8 @@ describe('Race Helpers', () => {
     })
 
     it('should not initialize position for existing horses', () => {
-      const horse1 = createMockHorse({ id: 'horse-1', name: 'Horse 1', condition: 100 })
-      const horse2 = createMockHorse({ id: 'horse-2', name: 'Horse 2', condition: 80, color: '#0000FF' })
+      const horse1 = createMockHorse({ id: 'horse-1' })
+      const horse2 = createMockHorse({ id: 'horse-2' })
 
       const roundData = createMockRound({
         number: 1,
@@ -118,16 +107,11 @@ describe('Race Helpers', () => {
         horses: [horse1, horse2],
       })
 
-      const state: RaceState = {
-        currentRound: 1,
-        raceStatus: 'idle',
+      const state = createState({
         horsePositions: {
           'horse-1': 100, // Already exists
         },
-        allRoundResults: [],
-        raceInterval: null,
-      }
-
+      })
       const commit = vi.fn()
 
       initializeRound(1, roundData, commit, state)

@@ -1,9 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { createStore } from 'vuex'
-import programModule, { getUniqueRandomItem } from './program'
-import type { ProgramState } from './program'
+
 import type { RootState } from '../../types'
 import { createMockHorse, createMockRound } from '@/store/testing'
+
+import programModule, { getUniqueRandomItem } from './program'
+import type { ProgramState } from './program'
 
 describe('Program Module', () => {
   let store: ReturnType<typeof createStore<RootState>>

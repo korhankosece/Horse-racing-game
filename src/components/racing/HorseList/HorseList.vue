@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useProgram } from '@/composables'
+
 import { AppColorIndicator, AppTable } from '@/components/common'
 import type { AppTableColumn } from '@/components/common/AppTable/AppTable.props'
+import { useProgram } from '@/composables'
 
 const { horses } = useProgram()
 

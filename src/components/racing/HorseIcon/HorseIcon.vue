@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { HorseIconProps } from './HorseIcon.props'
 import { withDefaults } from 'vue'
+
+import type { HorseIconProps } from './HorseIcon.props'
 
 const props = withDefaults(defineProps<HorseIconProps>(), {
   size: 40,

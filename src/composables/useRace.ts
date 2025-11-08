@@ -1,7 +1,8 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import type { Horse, RoundResult } from '@/types'
+
 import type { RaceStatus } from '@/store/modules/race'
+import type { Horse, RoundResult } from '@/types'
 
 export const useRace = () => {
   const store = useStore()
@@ -14,6 +15,8 @@ export const useRace = () => {
     () => store.getters['race/currentRoundResults'] as Array<{ position: number; horse: Horse }>
   )
   const allRoundResults = computed(() => store.getters['race/allRoundResults'] as RoundResult[])
+  const showRoundTransition = computed(() => store.getters['race/showRoundTransition'] as boolean)
+  const nextRoundNumber = computed(() => store.getters['race/nextRoundNumber'] as number | null)
 
   // Actions
   const startRace = () => store.dispatch('race/startRace')
@@ -24,6 +27,8 @@ export const useRace = () => {
 
   const stopRace = () => store.dispatch('race/stopRace')
 
+  const startNextRound = () => store.dispatch('race/startNextRound')
+
   return {
     // State
     currentRound,
@@ -31,10 +36,13 @@ export const useRace = () => {
     horsePositions,
     currentRoundResults,
     allRoundResults,
+    showRoundTransition,
+    nextRoundNumber,
     // Actions
     startRace,
     pauseRace,
     resumeRace,
     stopRace,
+    startNextRound,
   }
 }

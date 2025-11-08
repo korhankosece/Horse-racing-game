@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { createTestStore, createMockRound, createMockHorse, createMockRoundResult } from '@/store/testing'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { createMockHorse, createMockRound, createMockRoundResult, createTestStore } from '@/store/testing'
 
 describe('Race Actions', () => {
   let store: ReturnType<typeof createTestStore>
@@ -273,7 +274,7 @@ describe('Race Actions', () => {
       vi.spyOn(Math, 'random').mockRestore()
     })
 
-    it('should move to next round when all horses finished', async () => {
+    it('should show transition modal when all horses finished', async () => {
       const horse1 = createMockHorse({ id: 'horse-1', condition: 100 })
       const horse2 = createMockHorse({ id: 'horse-2', condition: 50 })
       const mockRound1 = createMockRound({
@@ -307,10 +308,120 @@ describe('Race Actions', () => {
 
       await store.dispatch('race/tickRace')
 
+      // Should pause race and show transition modal
+      expect(store.state.race.raceStatus).toBe('paused')
+      expect(store.state.race.showRoundTransition).toBe(true)
+      expect(store.state.race.nextRoundNumber).toBe(2)
+      expect(store.state.race.currentRound).toBe(1) // Not moved yet
+    })
+
+    it('should clear interval when showing transition modal', async () => {
+      const horse1 = createMockHorse({ id: 'horse-1', condition: 100 })
+      const horse2 = createMockHorse({ id: 'horse-2', condition: 50 })
+      const mockRound1 = createMockRound({
+        number: 1,
+        distance: 1200,
+        horses: [horse1, horse2],
+      })
+      const mockRound2 = createMockRound({
+        number: 2,
+        distance: 1400,
+        horses: [horse1, horse2],
+      })
+      const mockRoundResult = createMockRoundResult({
+        number: 1,
+        distance: 1200,
+        horses: [
+          { position: 1, horse: horse1 },
+          { position: 2, horse: horse2 },
+        ],
+      })
+
+      const mockInterval = setInterval(() => { }, 100) as unknown as number
+      store = createTestStore({
+        programState: { horses: [horse1, horse2], rounds: [mockRound1, mockRound2] },
+        raceState: {
+          raceStatus: 'running',
+          currentRound: 1,
+          horsePositions: { 'horse-1': 600, 'horse-2': 600 },
+          allRoundResults: [mockRoundResult],
+          raceInterval: mockInterval,
+        },
+      })
+
+      const clearIntervalSpy = vi.spyOn(global, 'clearInterval')
+      await store.dispatch('race/tickRace')
+
+      // Should clear interval when showing transition modal
+      expect(clearIntervalSpy).toHaveBeenCalledWith(mockInterval)
+      expect(store.state.race.raceInterval).toBeNull()
+      expect(store.state.race.showRoundTransition).toBe(true)
+      clearIntervalSpy.mockRestore()
+    })
+
+    it('should return early if nextRoundNumber is null', async () => {
+      store = createTestStore({
+        raceState: {
+          raceStatus: 'paused',
+          currentRound: 1,
+          showRoundTransition: true,
+          nextRoundNumber: null,
+        },
+      })
+
+      const initialRound = store.state.race.currentRound
+      await store.dispatch('race/startNextRound')
+
+      // Should not change anything
+      expect(store.state.race.currentRound).toBe(initialRound)
+      expect(store.state.race.raceStatus).toBe('paused')
+    })
+
+    it('should move to next round when startNextRound is called', async () => {
+      const horse1 = createMockHorse({ id: 'horse-1', condition: 100 })
+      const horse2 = createMockHorse({ id: 'horse-2', condition: 50 })
+      const mockRound1 = createMockRound({
+        number: 1,
+        distance: 1200,
+        horses: [horse1, horse2],
+      })
+      const mockRound2 = createMockRound({
+        number: 2,
+        distance: 1400,
+        horses: [horse1, horse2],
+      })
+
+      store = createTestStore({
+        programState: { horses: [horse1, horse2], rounds: [mockRound1, mockRound2] },
+        raceState: {
+          raceStatus: 'paused',
+          currentRound: 1,
+          showRoundTransition: true,
+          nextRoundNumber: 2,
+          allRoundResults: [
+            {
+              number: 1,
+              distance: 1200,
+              horses: [
+                { position: 1, horse: horse1 },
+                { position: 2, horse: horse2 },
+              ],
+            },
+          ],
+        },
+      })
+
+      await store.dispatch('race/startNextRound')
+
       expect(store.state.race.currentRound).toBe(2)
+      expect(store.state.race.raceStatus).toBe('running')
+      expect(store.state.race.showRoundTransition).toBe(false)
+      expect(store.state.race.nextRoundNumber).toBeNull()
       expect(store.state.race.horsePositions['horse-1']).toBe(0)
       expect(store.state.race.horsePositions['horse-2']).toBe(0)
       expect(store.state.race.allRoundResults).toHaveLength(2)
+      expect(store.state.race.raceInterval).not.toBeNull()
+      vi.advanceTimersByTime(100)
     })
 
     it('should finish race when all rounds completed', async () => {

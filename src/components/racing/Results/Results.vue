@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRace } from '@/composables'
-import { getOrdinalSuffix } from '@/utils'
+
 import { AppTable } from '@/components/common'
 import type { AppTableColumn } from '@/components/common/AppTable/AppTable.props'
+import { useRace } from '@/composables'
+import { getOrdinalSuffix } from '@/utils'
 
 const { allRoundResults } = useRace()
 

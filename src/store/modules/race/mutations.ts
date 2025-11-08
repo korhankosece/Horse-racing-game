@@ -1,4 +1,5 @@
 import type { Horse, RoundResult } from '@/types'
+
 import type { RaceState, RaceStatus } from './types'
 
 export const mutations = {
@@ -33,10 +34,22 @@ export const mutations = {
     state.allRoundResults = []
     state.currentRound = 1
     state.raceStatus = 'idle'
+    state.showRoundTransition = false
+    state.nextRoundNumber = null
     if (state.raceInterval) {
       clearInterval(state.raceInterval)
       state.raceInterval = null
     }
+  },
+
+  SHOW_ROUND_TRANSITION(state: RaceState, nextRound: number) {
+    state.showRoundTransition = true
+    state.nextRoundNumber = nextRound
+  },
+
+  HIDE_ROUND_TRANSITION(state: RaceState) {
+    state.showRoundTransition = false
+    state.nextRoundNumber = null
   },
 
   RESET_ROUND(state: RaceState) {

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { HorseList, RaceTrack, Program, Results } from '@/components/racing'
-import { useProgram } from '@/composables'
+
+import { HorseList, Program, RaceTrack, Results, RoundTransitionModal } from '@/components/racing'
+import { useProgram, useRace } from '@/composables'
 
 const { generateHorses, horses } = useProgram()
+const { showRoundTransition } = useRace()
 
 onMounted(() => {
   // Initialize horses once when page loads
@@ -24,6 +26,8 @@ onMounted(() => {
       <Program />
       <Results />
     </div>
+
+    <RoundTransitionModal v-if="showRoundTransition" />
   </div>
 </template>
 

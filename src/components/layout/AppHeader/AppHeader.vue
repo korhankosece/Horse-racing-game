@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import { AppButton } from '@/components/common'
 import { useProgram, useRace } from '@/composables'
 
-const { generateProgram } = useProgram()
+const { generateProgram, rounds } = useProgram()
 const { raceStatus, startRace, pauseRace, resumeRace } = useRace()
 
 const handleGenerateProgram = () => {
@@ -14,15 +15,20 @@ const isProgramButtonDisabled = computed(
   () => raceStatus.value === 'running' || raceStatus.value === 'paused'
 )
 
+const isRaceButtonDisabled = computed(() => rounds.value.length === 0)
+
 const buttonText = computed(() => {
-  if (raceStatus.value === 'idle' || raceStatus.value === 'finished') {
-    return 'START RACE'
-  } else if (raceStatus.value === 'running') {
-    return 'PAUSE RACE'
-  } else if (raceStatus.value === 'paused') {
-    return 'RESUME RACE'
+  switch (raceStatus.value) {
+    case 'idle':
+    case 'finished':
+      return 'START RACE'
+    case 'running':
+      return 'PAUSE RACE'
+    case 'paused':
+      return 'RESUME RACE'
+    default:
+      return 'START RACE'
   }
-  return 'START RACE'
 })
 
 const handleRaceControl = () => {
@@ -43,11 +49,19 @@ const handleRaceControl = () => {
       <AppButton
         variant="primary"
         :disabled="isProgramButtonDisabled"
+        aria-label="Generate race program"
         @click="handleGenerateProgram"
       >
         GENERATE PROGRAM
       </AppButton>
-      <AppButton variant="secondary" @click="handleRaceControl">{{ buttonText }}</AppButton>
+      <AppButton
+        variant="secondary"
+        :disabled="isRaceButtonDisabled"
+        :aria-label="buttonText"
+        @click="handleRaceControl"
+      >
+        {{ buttonText }}
+      </AppButton>
     </div>
   </header>
 </template>

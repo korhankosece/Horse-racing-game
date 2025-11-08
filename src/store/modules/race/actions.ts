@@ -1,6 +1,7 @@
 import { RACE_CONFIG } from '@/config'
+
+import { calculateSpeed, getCurrentRoundResult, getTrackLength, initializeRound } from './helpers'
 import type { ActionContext } from './types'
-import { calculateSpeed, getTrackLength, getCurrentRoundResult, initializeRound } from './helpers'
 
 export const actions = {
   startRace({ commit, state, rootState, dispatch }: ActionContext): void {
@@ -58,6 +59,28 @@ export const actions = {
     commit('RESET_RACE')
   },
 
+  startNextRound({ commit, state, rootState, dispatch }: ActionContext): void {
+    if (!state.nextRoundNumber) return
+
+    const nextRound = state.nextRoundNumber
+    commit('HIDE_ROUND_TRANSITION')
+    commit('SET_CURRENT_ROUND', nextRound)
+    commit('RESET_ROUND')
+
+    const nextRoundData = rootState.program.rounds.find(r => r.number === nextRound)
+    if (nextRoundData) {
+      initializeRound(nextRound, nextRoundData, commit, state)
+    }
+
+    commit('SET_RACE_STATUS', 'running')
+
+    const interval = setInterval(() => {
+      dispatch('tickRace')
+    }, RACE_CONFIG.interval)
+
+    commit('SET_RACE_INTERVAL', interval)
+  },
+
   tickRace({ commit, state, rootState }: ActionContext): void {
     if (state.raceStatus !== 'running') {
       return
@@ -110,14 +133,13 @@ export const actions = {
       const nextRound = state.currentRound + 1
 
       if (nextRound <= rootState.program.rounds.length) {
-        // Move to next round
-        commit('SET_CURRENT_ROUND', nextRound)
-        commit('RESET_ROUND')
-
-        const nextRoundData = rootState.program.rounds.find(r => r.number === nextRound)
-        if (nextRoundData) {
-          initializeRound(nextRound, nextRoundData, commit, state)
+        // Pause race and show transition modal
+        commit('SET_RACE_STATUS', 'paused')
+        if (state.raceInterval) {
+          clearInterval(state.raceInterval)
+          commit('SET_RACE_INTERVAL', null)
         }
+        commit('SHOW_ROUND_TRANSITION', nextRound)
       } else {
         // All rounds finished
         commit('SET_RACE_STATUS', 'finished')

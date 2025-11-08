@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
+
+import { createMockHorse, createMockRoundResult } from '@/store/testing'
+
 import { getters } from './getters'
 import type { RaceState } from './types'
-import { createMockHorse, createMockRoundResult } from '@/store/testing'
 
 describe('Race Getters', () => {
   const createState = (overrides?: Partial<RaceState>): RaceState => ({
@@ -10,6 +12,8 @@ describe('Race Getters', () => {
     horsePositions: {},
     allRoundResults: [],
     raceInterval: null,
+    showRoundTransition: false,
+    nextRoundNumber: null,
     ...overrides,
   })
 
@@ -67,6 +71,20 @@ describe('Race Getters', () => {
 
       const state = createState({ allRoundResults: roundResults })
       expect(getters.allRoundResults(state)).toEqual(roundResults)
+    })
+  })
+
+  describe('showRoundTransition', () => {
+    it('should return showRoundTransition state', () => {
+      const state = createState({ showRoundTransition: true })
+      expect(getters.showRoundTransition(state)).toBe(true)
+    })
+  })
+
+  describe('nextRoundNumber', () => {
+    it('should return nextRoundNumber state', () => {
+      const state = createState({ nextRoundNumber: 2 })
+      expect(getters.nextRoundNumber(state)).toBe(2)
     })
   })
 })

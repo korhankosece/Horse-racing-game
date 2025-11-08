@@ -29,6 +29,8 @@ export const createTestStore = (options: TestStoreOptions = {}) => {
           horsePositions: {},
           allRoundResults: [],
           raceInterval: null,
+          showRoundTransition: false,
+          nextRoundNumber: null,
           ...(options.raceState || {}),
         }),
       },
@@ -37,4 +39,3 @@ export const createTestStore = (options: TestStoreOptions = {}) => {
 
   return store
 }
-

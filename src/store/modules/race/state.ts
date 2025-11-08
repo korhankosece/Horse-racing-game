@@ -6,4 +6,6 @@ export const initialState: RaceState = {
   horsePositions: {},
   allRoundResults: [],
   raceInterval: null,
+  showRoundTransition: false,
+  nextRoundNumber: null,
 }

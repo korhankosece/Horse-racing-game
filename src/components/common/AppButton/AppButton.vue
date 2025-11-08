@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { AppButtonProps } from './AppButton.props'
 import { withDefaults } from 'vue'
+
+import type { AppButtonProps } from './AppButton.props'
 
 const props = withDefaults(defineProps<AppButtonProps>(), {
   variant: 'primary',

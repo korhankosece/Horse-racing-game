@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useProgram } from '@/composables'
-import { getOrdinalSuffix } from '@/utils'
+
 import { AppTable } from '@/components/common'
 import type { AppTableColumn } from '@/components/common/AppTable/AppTable.props'
+import { useProgram } from '@/composables'
+import { getOrdinalSuffix } from '@/utils'
 
 const { rounds } = useProgram()
 

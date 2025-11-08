@@ -1,5 +1,6 @@
-import type { Horse, Round, RoundResult } from '@/types'
 import { RACE_CONFIG } from '@/config'
+import type { Horse, Round, RoundResult } from '@/types'
+
 import type { RaceState } from './types'
 
 export const calculateSpeed = (horse: Horse): number => {

@@ -1,8 +1,9 @@
 import type { Module } from 'vuex'
-import type { Horse, Round } from '@/types'
-import { HORSE_NAMES } from '@/data/horseNames'
+
+import { HORSES_PER_ROUND, ROUND_DISTANCES, TOTAL_HORSES } from '@/config'
 import { HORSE_COLORS } from '@/data/horseColors'
-import { ROUND_DISTANCES, TOTAL_HORSES, HORSES_PER_ROUND } from '@/config'
+import { HORSE_NAMES } from '@/data/horseNames'
+import type { Horse, Round } from '@/types'
 
 export interface ProgramState {
   horses: Horse[]

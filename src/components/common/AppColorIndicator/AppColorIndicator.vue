@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { ColorIndicatorProps } from './AppColorIndicator.props'
 import { withDefaults } from 'vue'
+
+import type { ColorIndicatorProps } from './AppColorIndicator.props'
 
 const props = withDefaults(defineProps<ColorIndicatorProps>(), {
   size: 20,
