@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRace } from '@/composables'
 import { getOrdinalSuffix } from '@/utils'
 import { AppTable } from '@/components/common'
@@ -10,6 +11,20 @@ const columns: AppTableColumn[] = [
   { key: 'position', label: 'Position' },
   { key: 'name', label: 'Name' },
 ]
+
+const roundTableDataMap = computed(() => {
+  const map = new Map<number, Array<{ position: number; name: string }>>()
+  allRoundResults.value.forEach(result => {
+    map.set(
+      result.number,
+      result.horses.map(item => ({
+        position: item.position,
+        name: item.horse.name,
+      }))
+    )
+  })
+  return map
+})
 </script>
 
 <template>
@@ -20,15 +35,7 @@ const columns: AppTableColumn[] = [
         <h3 class="round-title">
           {{ getOrdinalSuffix(result.number) }} Lap - {{ result.distance }}m
         </h3>
-        <AppTable
-          :columns="columns"
-          :data="
-            result.horses.map((item: { position: number; horse: { name: string } }) => ({
-              position: item.position,
-              name: item.horse.name,
-            }))
-          "
-        />
+        <AppTable :columns="columns" :data="roundTableDataMap.get(result.number) || []" />
       </div>
     </div>
   </div>

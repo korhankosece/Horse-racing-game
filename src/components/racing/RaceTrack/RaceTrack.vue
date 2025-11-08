@@ -1,43 +1,64 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { ROUND_DISTANCES, RACE_CONFIG } from '@/config'
-import { useProgram } from '@/composables'
+import { computed } from 'vue'
+import { RACE_CONFIG } from '@/config'
+import { useProgram, useRace } from '@/composables'
 import { getOrdinalSuffix } from '@/utils'
 import HorseIcon from '@/components/racing/HorseIcon'
 
 const { rounds } = useProgram()
+const { currentRound, horsePositions } = useRace()
 
-const currentRound = ref(1)
-const currentRoundHorses = computed(() => {
-  const round = rounds.value.find(r => r.number === currentRound.value)
-  return round ? round.horses : []
-})
-const currentDistance = computed(() => ROUND_DISTANCES[currentRound.value - 1] || 1200)
+const hasRounds = computed(() => rounds.value.length > 0)
+
+const currentRoundData = computed(() => rounds.value.find(r => r.number === currentRound.value))
+
+const currentRoundHorses = computed(() =>
+  currentRoundData.value ? currentRoundData.value.horses : []
+)
+
+const currentDistance = computed(() =>
+  currentRoundData.value ? currentRoundData.value.distance : 1200
+)
+
 const trackLength = computed(
   () =>
-    RACE_CONFIG.trackLengths[currentDistance.value as keyof typeof RACE_CONFIG.trackLengths] || 600
+    (RACE_CONFIG.trackLengths[currentDistance.value as keyof typeof RACE_CONFIG.trackLengths] ||
+      600) + 48
 )
 </script>
 
 <template>
   <div class="race-track">
-    <h2>{{ getOrdinalSuffix(currentRound) }} Lap {{ currentDistance }}m</h2>
-    <div class="track-container">
-      <div class="track" :style="{ width: `${trackLength * 1.3}px` }">
-        <div
-          v-for="(horse, index) in currentRoundHorses"
-          :key="horse.id"
-          class="lane"
-          :style="{ top: `${index * 10}%` }"
-        >
-          <div class="lane-number">{{ index + 1 }}</div>
-          <div class="horse-container">
-            <HorseIcon :color="horse.color" :size="60" />
+    <template v-if="hasRounds">
+      <h2>{{ getOrdinalSuffix(currentRound) }} Lap {{ currentDistance }}m</h2>
+      <div class="track-container">
+        <div class="track" :style="{ width: `${trackLength}px` }">
+          <div
+            v-for="(horse, index) in currentRoundHorses"
+            :key="horse.id"
+            class="lane"
+            :style="{ top: `${index * 10}%` }"
+          >
+            <div class="lane-number">{{ index + 1 }}</div>
+            <div
+              class="horse-container"
+              :style="{ left: `${(horsePositions[horse.id] || 0) + 48}px` }"
+            >
+              <HorseIcon :color="horse.color" :size="60" />
+            </div>
           </div>
+          <div class="finish-line">FINISH</div>
         </div>
-        <div class="finish-line">FINISH</div>
       </div>
-    </div>
+    </template>
+    <template v-else>
+      <div class="empty-state">
+        <div class="empty-state-content">
+          <h2>No Race Program</h2>
+          <p>Please generate a program to start the race.</p>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -46,9 +67,10 @@ const trackLength = computed(
 
 .race-track {
   height: 100%;
+  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem 1rem;
   background-color: $theme-colors-background-white;
   min-height: 0;
   overflow: hidden;
@@ -56,14 +78,14 @@ const trackLength = computed(
   h2 {
     margin-bottom: 1rem;
     font-size: $theme-fontSize-lg;
+    padding: 0.5rem 1rem 0;
   }
 
   .track-container {
     flex: 1;
     overflow-x: auto;
     overflow-y: hidden;
-    padding-bottom: 8px;
-    padding-right: 8px;
+    padding: 0.5rem 1rem 8px 1rem;
     scrollbar-gutter: stable;
   }
 
@@ -112,9 +134,33 @@ const trackLength = computed(
 
     .horse-container {
       position: absolute;
-      left: 3rem;
       transition: left 0.1s linear;
       z-index: 2;
+    }
+  }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $theme-colors-background-lighter;
+
+    .empty-state-content {
+      text-align: center;
+      color: $theme-colors-text-secondary;
+
+      h2 {
+        font-size: $theme-fontSize-xl;
+        margin: 0 0 0.5rem 0;
+        color: $theme-colors-text-primary;
+        font-weight: 600;
+      }
+
+      p {
+        font-size: $theme-fontSize-base;
+        margin: 0;
+      }
     }
   }
 

@@ -8,13 +8,11 @@ export const calculateSpeed = (horse: Horse): number => {
   return baseSpeed * conditionMultiplier
 }
 
-export const getTrackLength = (distance: number): number => {
-  return RACE_CONFIG.trackLengths[distance as keyof typeof RACE_CONFIG.trackLengths] || 600
-}
+export const getTrackLength = (distance: number): number =>
+  RACE_CONFIG.trackLengths[distance as keyof typeof RACE_CONFIG.trackLengths] || 600
 
-export const getCurrentRoundResult = (state: RaceState): RoundResult | undefined => {
-  return state.allRoundResults.find(r => r.number === state.currentRound)
-}
+export const getCurrentRoundResult = (state: RaceState): RoundResult | undefined =>
+  state.allRoundResults.find(r => r.number === state.currentRound)
 
 export const initializeRound = (
   roundNumber: number,

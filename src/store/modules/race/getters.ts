@@ -4,9 +4,7 @@ export const getters = {
   currentRound: (state: RaceState) => state.currentRound,
   raceStatus: (state: RaceState) => state.raceStatus,
   horsePositions: (state: RaceState) => state.horsePositions,
-  currentRoundResults: (state: RaceState) => {
-    const roundResult = state.allRoundResults.find(r => r.number === state.currentRound)
-    return roundResult?.horses || []
-  },
+  currentRoundResults: (state: RaceState) =>
+    state.allRoundResults.find(r => r.number === state.currentRound)?.horses || [],
   allRoundResults: (state: RaceState) => state.allRoundResults,
 }

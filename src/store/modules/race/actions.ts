@@ -5,8 +5,6 @@ import { calculateSpeed, getTrackLength, getCurrentRoundResult, initializeRound 
 export const actions = {
   startRace({ commit, state, rootState, dispatch }: ActionContext): void {
     if (rootState.program.rounds.length === 0) {
-      // eslint-disable-next-line no-console
-      console.warn('No rounds available. Please generate program first.')
       return
     }
 
@@ -25,13 +23,6 @@ export const actions = {
     const currentRoundData = rootState.program.rounds.find(r => r.number === state.currentRound)
     if (currentRoundData) {
       initializeRound(state.currentRound, currentRoundData, commit, state)
-
-      // eslint-disable-next-line no-console
-      console.log('🏁 Race Started!', {
-        round: state.currentRound,
-        distance: currentRoundData.distance,
-        horses: currentRoundData.horses.map(h => ({ name: h.name, condition: h.condition })),
-      })
     }
 
     const interval = setInterval(() => {
@@ -44,24 +35,16 @@ export const actions = {
   pauseRace({ commit, state }: ActionContext): void {
     if (state.raceStatus === 'running') {
       commit('SET_RACE_STATUS', 'paused')
-      const currentRoundResult = getCurrentRoundResult(state)
-      // eslint-disable-next-line no-console
-      console.log('⏸️ Race Paused', {
-        round: state.currentRound,
-        finishedHorses: currentRoundResult?.horses.length || 0,
-      })
+      if (state.raceInterval) {
+        clearInterval(state.raceInterval)
+        commit('SET_RACE_INTERVAL', null)
+      }
     }
   },
 
   resumeRace({ commit, state, dispatch }: ActionContext): void {
     if (state.raceStatus === 'paused') {
       commit('SET_RACE_STATUS', 'running')
-      const currentRoundResult = getCurrentRoundResult(state)
-      // eslint-disable-next-line no-console
-      console.log('▶️ Race Resumed', {
-        round: state.currentRound,
-        finishedHorses: currentRoundResult?.horses.length || 0,
-      })
 
       const interval = setInterval(() => {
         dispatch('tickRace')
@@ -93,11 +76,15 @@ export const actions = {
       return
     }
 
+    // Create Set of finished horse IDs for O(1) lookup
+    const finishedHorseIds = new Set(
+      currentRoundResult.horses.map(result => result.horse.id)
+    )
+
     // Update positions for all horses in current round
     currentRoundData.horses.forEach(horse => {
       // Skip if horse already finished
-      const isFinished = currentRoundResult.horses.some(result => result.horse.id === horse.id)
-      if (isFinished) {
+      if (finishedHorseIds.has(horse.id)) {
         return
       }
 
@@ -115,13 +102,6 @@ export const actions = {
           position,
           horse,
         })
-
-        // eslint-disable-next-line no-console
-        console.log(`🏆 Horse Finished! Position: ${position}`, {
-          name: horse.name,
-          condition: horse.condition,
-          round: state.currentRound,
-        })
       }
     })
 
@@ -137,14 +117,6 @@ export const actions = {
         const nextRoundData = rootState.program.rounds.find(r => r.number === nextRound)
         if (nextRoundData) {
           initializeRound(nextRound, nextRoundData, commit, state)
-
-          // eslint-disable-next-line no-console
-          console.log('🔄 Round Finished! Moving to next round...', {
-            previousRound: state.currentRound - 1,
-            currentRound: nextRound,
-            distance: nextRoundData.distance,
-            horses: nextRoundData.horses.map(h => ({ name: h.name, condition: h.condition })),
-          })
         }
       } else {
         // All rounds finished
@@ -153,10 +125,6 @@ export const actions = {
           clearInterval(state.raceInterval)
           commit('SET_RACE_INTERVAL', null)
         }
-        // eslint-disable-next-line no-console
-        console.log('🎉 Race Finished! All rounds completed.', {
-          totalRounds: rootState.program.rounds.length,
-        })
       }
     }
   },
