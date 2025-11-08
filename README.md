@@ -42,6 +42,7 @@ The application will start at `http://localhost:5173`
 - **Race Visualization**: Live race track with visual progress representation and round transition countdown
 - **Results & Statistics**: Real-time results tables, complete race history, and position tracking
 - **Accessibility**: ARIA attributes and semantic HTML for inclusive user experience
+- **Customizable Configuration**: Easy-to-modify config file for customizing race parameters, speeds, and game rules
 
 ## Tech Stack
 
@@ -107,6 +108,49 @@ This project demonstrates enterprise-level development practices with a focus on
 - **Build Pipeline**: Parallel type checking and build processes for optimal development experience.
 - **Hot Module Replacement**: Fast development feedback with Vite's HMR.
 - **Test-Driven Development**: Comprehensive test suite enables confident refactoring and feature additions.
+
+## Configuration
+
+The application includes a comprehensive configuration file (`src/config/index.ts`) that allows you to easily customize the game behavior:
+
+### Available Configuration Options
+
+- **Race Speed & Timing**:
+  - `interval`: Race update interval in milliseconds (default: 100ms)
+  - `maxSpeed`: Maximum horse speed in pixels per interval (default: 50)
+
+- **Track Settings**:
+  - `trackLengths`: Map of race distances (meters) to track lengths (pixels)
+  - `trackWidth`: Maximum track width in pixels (default: 1100)
+
+- **Race Distances**:
+  - `ROUND_DISTANCES`: Available race distances in meters (default: [1200, 1400, 1600, 1800, 2000, 2200])
+
+- **Horse Settings**:
+  - `HORSES_PER_ROUND`: Number of horses per round (default: 10)
+  - `TOTAL_HORSES`: Total number of horses in the game (default: 20)
+
+### Example Customization
+
+```typescript
+// src/config/index.ts
+export const RACE_CONFIG = {
+  interval: 50, // Faster updates (50ms instead of 100ms)
+  maxSpeed: 75, // Faster horses (75 pixels per interval)
+  trackLengths: {
+    1200: 800, // Longer tracks for same distance
+    1400: 900,
+    // ... add more distances
+  },
+  trackWidth: 1200, // Wider track
+} as const
+
+export const ROUND_DISTANCES = [1000, 1500, 2000, 2500] as const
+export const HORSES_PER_ROUND = 12
+export const TOTAL_HORSES = 24
+```
+
+Simply modify the values in `src/config/index.ts` to customize the game to your preferences!
 
 ## Available Scripts
 
